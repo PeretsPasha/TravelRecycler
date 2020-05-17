@@ -3,9 +3,11 @@ package com.example.travelrecycler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.travelrecycler.adapter.TripsAdapter;
 import com.example.travelrecycler.models.Ads;
@@ -16,7 +18,9 @@ import com.example.travelrecycler.models.Trip;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TripsAdapter.OnItemClickListener {
+
+    private List<Item> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
-        List<Item> items = new ArrayList<>();
+        items = new ArrayList<>();
+
+        TripsAdapter adapter = new TripsAdapter(items);
 
         Trip trip1 = new Trip(R.drawable.croatia, "Хорватія", "fdgkjdвапвапвапвапfhkghdk");
         items.add(new Item(0, trip1));
@@ -69,6 +75,26 @@ public class MainActivity extends AppCompatActivity {
         News news4 = new News("dfgdf", "sdвапвпвапвапвапваdsfsdfsdl;fklsdl;f;sd;lfsd;lf;lsdkf;lsd;lfkl;dsksdkпвапвапвпвапвапвапвапвапвапвапавпвапвапвапвапfs");
         items.add(new Item(3, news4));
 
-        recyclerView.setAdapter(new TripsAdapter(items));
+        recyclerView.setAdapter(adapter);
+        adapter.setOnClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        if (position == 0){
+            Item item = items.get(position);
+            Trip trip = (Trip) item.getObject();
+            Intent intent = new Intent(this, ItemDetail.class);
+            intent.putExtra("name", trip.getTripTitle());
+            intent.putExtra("image", trip.getTripImage());
+            startActivity(intent);
+        } else if (position == 3){
+            Item item = items.get(position);
+            Trip trip = (Trip) item.getObject();
+            Intent intent = new Intent(this, ItemDetail.class);
+            intent.putExtra("name", trip.getTripTitle());
+            intent.putExtra("image", trip.getTripImage());
+            startActivity(intent);
+        }
     }
 }

@@ -18,6 +18,7 @@ import java.util.List;
 public class TripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private List<Item> items;
+    private OnItemClickListener listener;
 
     public TripsAdapter(List<Item> items) {
         this.items = items;
@@ -32,7 +33,7 @@ public class TripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     LayoutInflater.from(parent.getContext()).inflate(
                             R.layout.item_conteiner_trip,
                             parent,
-                            false)
+                            false), listener
                     );
         } else if (viewType == 1){
             return new AdsViewHolder(
@@ -84,11 +85,23 @@ public class TripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         private ImageView imageTrip;
         private TextView textTripTitle, textTrip;
 
-        public TripViewHolder(@NonNull View itemView) {
+        public TripViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             imageTrip = itemView.findViewById(R.id.imageTrip);
             textTripTitle = itemView.findViewById(R.id.textTripTitle);
             textTrip = itemView.findViewById(R.id.textTrip);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
 
         void setTripDate(Trip trip){
@@ -129,4 +142,13 @@ public class TripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             textNews.setText(news.getNews());
         }
     }
+
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnClickListener(OnItemClickListener listener){
+        this.listener = listener;
+    }
+
 }
